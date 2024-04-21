@@ -5,3 +5,5 @@
 * This algorithm is designed using recursion.
 
 ![](https://github.com/nitesh810/N-Queen-Puzzle/blob/main/visualisation.gif)
+
+You can find the website live [here](https://green-danica-44.tiiny.site)
