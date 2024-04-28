@@ -1,4 +1,9 @@
-'use strict'
+'use strict' 
+// "use strict"; at the beginning of a JavaScript file or function enforces strict mode, 
+// which catches errors, improves security, and ensures compatibility with future JavaScript versions.
+// By using "use strict";, you opt into a more disciplined and secure mode of coding,
+// which can lead to cleaner, more maintainable, and less error-prone code.
+
 const numberbox = document.getElementById("numberbox");
 const slider = document.getElementById("slider");
 const progressBar = document.getElementById("progress-bar")
@@ -7,7 +12,7 @@ const pauseButton = document.getElementById("pause-button");
 
 const queen = '<i class="fas fa-chess-queen" style="color:#000"></i>';
 
-let n, speed, tempSpeed, q, Board = 0;
+let n, speed, q, Board = 0;
 // Board = 0;
 
 // Creating array for all the possible arrangements of the N-Queen
@@ -19,18 +24,14 @@ let pos = {};
 
 
 // Setting the slider value onSlide
-speed = (100 - slider.value) * 10;
-tempSpeed = speed;
 slider.oninput = function () {
     progressBar.style.width = this.value + "%";
-    speed = slider.value;
-    speed = (100 - speed) * 10;
+    speed = (100 - slider.value) * 10;
 }
 
 class Queen {
     constructor() {
-        this.position = Object.assign({}, pos);
-        // this.Board = 0;
+        this.Board = 0;
         this.uuid = [];
     }
 
@@ -104,7 +105,7 @@ class Queen {
     clearColor = async (board) => {
         for (let j = 0; j < n; ++j) {
             const table = document.getElementById(`table-${this.uuid[board]}`);
-            const row = table.firstChild.childNodes[j];
+            const row = table.getElementsByTagName("tr")[j];
             for (let k = 0; k < n; ++k)
                 (j + k) & 1
                     ? (row.getElementsByTagName("td")[k].style.backgroundColor = "#FF9F1C")
@@ -113,18 +114,17 @@ class Queen {
     }
 
     delay = async () => {
-        await new Promise((done) => setTimeout(() => done(), speed));
+        await new Promise((done) => {
+        setTimeout(() => {
+        done()}, speed)}); // In the context of this code, done() is just a conventional 
+                        // name for the callback function passed to the setTimeout function.
+                        // The purpose of done() here is to resolve the Promise, indicating 
+                        // that the asynchronous operation has completed successfully.
     }
 
     solveQueen = async (board, r, n) => {
         if (r == n) {
             ++Board;
-            let table = document.getElementById(`table-${this.uuid[Board]}`);
-            for (let k = 0; k < n; ++k) {
-                let row = table.firstChild.childNodes[k];
-                row.getElementsByTagName("td")[this.position[board][k]].innerHTML = queen;
-            }
-            this.position[Board] = this.position[board];
             return;
         }
 
@@ -140,20 +140,16 @@ class Queen {
                 let row = table.firstChild.childNodes[r];
                 row.getElementsByTagName("td")[i].innerHTML = queen;
 
-                this.position[board][r] = i;
-
                 if (await q.solveQueen(board, r + 1, n))
                     await q.clearColor(board);
 
                 await q.delay();
-                board = Board;
                 // console.log(this.Board)
                 table = document.getElementById(`table-${this.uuid[board]}`);
-                // console.log(JSON.parse(JSON.stringify(table)));
-                row = table.firstChild.childNodes[r];
+               
+                row = table.querySelector("tr")[r];
                 row.getElementsByTagName("td")[i].innerHTML = "-";
 
-                delete this.position[`${board}`][`${r}`];
             }
         }
     }
@@ -220,7 +216,7 @@ playButton.onclick = async function visualise() {
                 col.style.border = "0.3px solid #373f51";
             }
         }
-        await q.clearColor(k);
+    //    await q.clearColor(k);
     }
     await q.nQueen();
 };
