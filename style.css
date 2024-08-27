@@ -1,8 +1,3 @@
-/* Set box-sizing for all elements to border-box for consistent padding and border behavior */
-* {
-    box-sizing: border-box;
-  }
-  
   /* Reset margin and padding for the body and set the default font */
   body {
     margin: 0;
