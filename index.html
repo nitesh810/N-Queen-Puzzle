@@ -4,25 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>N-Queen-Visualiser</title>
+    <!-- Linking FontAwesome for icons -->
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
     />
+    <!-- Linking the external CSS file -->
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
+    <!-- Header section containing the title of the visualizer -->
     <header class="header">
       <h2>
         N-Queens Visualiser <i class="fas fa-crown" style="color: #fdfffc"></i>
       </h2>
     </header>
+
+    <!-- Main section for the N-Queen visualizer input and controls -->
     <div class="n-queen">
+      <!-- Input box to enter the number of queens -->
       <div class="inputbox">
         <input type="number" class="numberbox" id="numberbox" required />
         <label>Enter total Queens</label>
       </div>
 
+      <!-- Slider to control the speed of the visualization -->
       <div class="slider-container">
         <input
           class="slider"
@@ -32,15 +39,23 @@
           max="100"
           value="60"
         />
+        <!-- Progress bar indicating the speed of the visualization -->
         <div id="progress-bar"></div>
       </div>
+      
+      <!-- Play button to start the visualization -->
       <button class="play-button" id="play-button">
         <i class="fa fa-play" aria-hidden="true"></i> Play
       </button>
     </div>
 
+    <!-- Section to display the arrangements of queens -->
     <div class="queen-arrangement" id="queen-arrangement"></div>
+    
+    <!-- Section to display the N-Queen chessboard -->
     <div id="n-queen-board"></div>
+    
+    <!-- Linking the external JavaScript file -->
     <script src="app.js"></script>
   </body>
 </html>
