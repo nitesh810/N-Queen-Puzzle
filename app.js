@@ -1,40 +1,37 @@
-'use strict' 
-// "use strict"; at the beginning of a JavaScript file or function enforces strict mode, 
-// which catches errors, improves security, and ensures compatibility with future JavaScript versions.
-// By using "use strict";, you opt into a more disciplined and secure mode of coding,
-// which can lead to cleaner, more maintainable, and less error-prone code.
-
+// DOM elements
 const numberbox = document.getElementById("numberbox");
 const slider = document.getElementById("slider");
-const progressBar = document.getElementById("progress-bar")
+const progressBar = document.getElementById("progress-bar");
 const playButton = document.getElementById('play-button');
-const pauseButton = document.getElementById("pause-button");
 
+// HTML code to represent a queen piece
 const queen = '<i class="fas fa-chess-queen" style="color:#000"></i>';
 
-let n, speed, q, Board = 0;
-// Board = 0;
+let n, speed, tempSpeed, q, Board = 0;  // Initialize variables
 
-// Creating array for all the possible arrangements of the N-Queen
+// Array storing the number of possible arrangements for N-Queens
 let array = [0, 2, 1, 1, 3, 11, 5, 41, 93];
 
-// Used to store the state of the boards;
+// Object to keep track of board states during the solving process
 let pos = {};
-// let position = {};
 
-
-// Setting the slider value onSlide
+// Update the speed of visualization based on the slider's value
+speed = (100 - slider.value) * 10;
+tempSpeed = speed;
 slider.oninput = function () {
     progressBar.style.width = this.value + "%";
-    speed = (100 - slider.value) * 10;
+    speed = slider.value;
+    speed = (100 - speed) * 10;
 }
 
+// Class representing the Queen and its solving methods
 class Queen {
     constructor() {
-        this.Board = 0;
-        this.uuid = [];
+        this.position = Object.assign({}, pos);  // Clone the current position object
+        this.uuid = [];  // Array to store unique IDs for boards
     }
 
+    // Method to initiate the solving of the N-Queen problem
     nQueen = async () => {
         Board = 0;
         this.position[`${Board}`] = {};
@@ -44,56 +41,50 @@ class Queen {
         numberbox.disabled = false;
     }
 
+    // Method to check if placing a queen is valid at a given row and column
     isValid = async (board, r, col, n) => {
-        //Setting the current box color to orange
         const table = document.getElementById(`table-${this.uuid[board]}`);
         const currentRow = table.firstChild.childNodes[r];
         const currentColumn = currentRow.getElementsByTagName("td")[col];
         currentColumn.innerHTML = queen;
-        // currentColumn.style.backgroundColor = "#FF9F1C";
         await q.delay();
 
-        // Checking the queen in the same column
+        // Check the same column above the current position
         for (let i = r - 1; i >= 0; --i) {
             const row = table.firstChild.childNodes[i];
             const column = row.getElementsByTagName("td")[col];
 
-            const value = column.innerHTML;
-
-            if (value == queen) {
+            if (column.innerHTML == queen) {
                 column.style.backgroundColor = "#FB5607";
-                currentColumn.innerHTML = "-"
+                currentColumn.innerHTML = "-";
                 return false;
             }
             column.style.backgroundColor = "#ffca3a";
             await q.delay();
         }
 
-        //Checking the upper left diagonal
+        // Check the upper left diagonal
         for (let i = r - 1, j = col - 1; i >= 0 && j >= 0; --i, --j) {
             const row = table.firstChild.childNodes[i];
             const column = row.getElementsByTagName("td")[j];
-            const value = column.innerHTML;
 
-            if (value == queen) {
+            if (column.innerHTML == queen) {
                 column.style.backgroundColor = "#fb5607";
-                currentColumn.innerHTML = "-"
+                currentColumn.innerHTML = "-";
                 return false;
             }
             column.style.backgroundColor = "#ffca3a";
             await q.delay();
         }
 
-        // Checking the upper right diagonal
+        // Check the upper right diagonal
         for (let i = r - 1, j = col + 1; i >= 0 && j < n; --i, ++j) {
             const row = table.firstChild.childNodes[i];
             const column = row.getElementsByTagName("td")[j];
 
-            const value = column.innerHTML;
-
-            if (value == queen) {
+            if (column.innerHTML == queen) {
                 column.style.backgroundColor = "#FB5607";
-                currentColumn.innerHTML = "-"
+                currentColumn.innerHTML = "-";
                 return false;
             }
             column.style.backgroundColor = "#ffca3a";
@@ -102,10 +93,11 @@ class Queen {
         return true;
     }
 
+    // Method to reset the color of the board to the default
     clearColor = async (board) => {
         for (let j = 0; j < n; ++j) {
             const table = document.getElementById(`table-${this.uuid[board]}`);
-            const row = table.getElementsByTagName("tr")[j];
+            const row = table.firstChild.childNodes[j];
             for (let k = 0; k < n; ++k)
                 (j + k) & 1
                     ? (row.getElementsByTagName("td")[k].style.backgroundColor = "#FF9F1C")
@@ -113,48 +105,52 @@ class Queen {
         }
     }
 
+    // Method to introduce a delay in the visualization
     delay = async () => {
-        await new Promise((done) => {
-        setTimeout(() => {
-        done()}, speed)}); // In the context of this code, done() is just a conventional 
-                        // name for the callback function passed to the setTimeout function.
-                        // The purpose of done() here is to resolve the Promise, indicating 
-                        // that the asynchronous operation has completed successfully.
+        await new Promise((done) => setTimeout(() => done(), speed));
     }
 
+    // Recursive method to solve the N-Queen problem
     solveQueen = async (board, r, n) => {
         if (r == n) {
             ++Board;
+            let table = document.getElementById(`table-${this.uuid[Board]}`);
+            for (let k = 0; k < n; ++k) {
+                let row = table.firstChild.childNodes[k];
+                row.getElementsByTagName("td")[this.position[board][k]].innerHTML = queen;
+            }
+            this.position[Board] = this.position[board];
             return;
         }
 
         for (let i = 0; i < n; ++i) {
             await q.delay();
-            // console.log("outside:" + board);
             await q.clearColor(board);
             if (await q.isValid(board, r, i, n)) {
                 await q.delay();
-                // console.log("inside:" + board)
                 await q.clearColor(board);
                 let table = document.getElementById(`table-${this.uuid[board]}`);
                 let row = table.firstChild.childNodes[r];
                 row.getElementsByTagName("td")[i].innerHTML = queen;
 
+                this.position[board][r] = i;
+
                 if (await q.solveQueen(board, r + 1, n))
                     await q.clearColor(board);
 
                 await q.delay();
-                // console.log(this.Board)
+                board = Board;
                 table = document.getElementById(`table-${this.uuid[board]}`);
-               
-                row = table.querySelector("tr")[r];
+                row = table.firstChild.childNodes[r];
                 row.getElementsByTagName("td")[i].innerHTML = "-";
 
+                delete this.position[`${board}`][`${r}`];
             }
         }
     }
 }
 
+// Event listener for the play button to start the visualization
 playButton.onclick = async function visualise() {
     const chessBoard = document.getElementById("n-queen-board");
     const arrangement = document.getElementById("queen-arrangement");
@@ -172,12 +168,12 @@ playButton.onclick = async function visualise() {
         return;
     }
 
-    // Removing all the of previous execution context
+    // Clear the previous boards and arrangements
     while (chessBoard.hasChildNodes()) {
         chessBoard.removeChild(chessBoard.firstChild);
     }
     if (arrangement.hasChildNodes()) {
-        arrangement.removeChild(arrangement.lastChild)
+        arrangement.removeChild(arrangement.lastChild);
     }
 
     const para = document.createElement("p");
@@ -185,15 +181,14 @@ playButton.onclick = async function visualise() {
     para.innerHTML = `For ${n}x${n} board, ${array[n] - 1} arrangements are possible.`;
     arrangement.appendChild(para);
 
-    //Adding boards to the Div
+    // Create the boards in the UI
     if (chessBoard.childElementCount === 0) {
         for (let i = 0; i < array[n]; ++i) {
             q.uuid.push(Math.random());
             let div = document.createElement('div');
             let table = document.createElement('table');
             let header = document.createElement('h4');
-            // div.setAttribute("id", `div-${100 + uuid[i]}`)
-            header.innerHTML = `Board ${i + 1} `
+            header.innerHTML = `Board ${i + 1} `;
             table.setAttribute("id", `table-${q.uuid[i]}`);
             header.setAttribute("id", `paragraph-${i}`);
             chessBoard.appendChild(div);
@@ -202,13 +197,14 @@ playButton.onclick = async function visualise() {
         }
     }
 
+    // Initialize the boards with cells and colors
     for (let k = 0; k < array[n]; ++k) {
         let table = document.getElementById(`table-${q.uuid[k]}`);
         for (let i = 0; i < n; ++i) {
-            const row = table.insertRow(i); // inserting ith row
+            const row = table.insertRow(i);
             row.setAttribute("id", `Row${i} `);
             for (let j = 0; j < n; ++j) {
-                const col = row.insertCell(j); // inserting jth column
+                const col = row.insertCell(j);
                 (i + j) & 1
                     ? (col.style.backgroundColor = "#FF9F1C")
                     : (col.style.backgroundColor = "#FCCD90");
@@ -216,7 +212,7 @@ playButton.onclick = async function visualise() {
                 col.style.border = "0.3px solid #373f51";
             }
         }
-    //    await q.clearColor(k);
+        await q.clearColor(k);
     }
     await q.nQueen();
 };
