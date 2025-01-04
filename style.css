@@ -134,18 +134,6 @@
     color: #ffba08;
   }
   
-  /* Styling for the slider thumb in Mozilla Firefox */
-  .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background-color: #fa7921;
-    cursor: pointer;
-    position: relative;
-    top: -2px;
-    border-radius: 50%;
-    z-index: 2;
-  }
-  
   /* Styling for the slider thumb when hovered */
   .slider::-webkit-slider-thumb:hover {
     box-shadow: 0 0 0 2px white, 0 0 0 4px #fa7921;
