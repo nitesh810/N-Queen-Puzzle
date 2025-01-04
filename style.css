@@ -136,7 +136,14 @@
   
   /* Styling for the slider thumb when hovered */
   .slider::-webkit-slider-thumb:hover {
+    /* 0 0: No horizontal or vertical offset.
+      0 blur: No blur, sharp edges.
+      4px spread: Expands the shadow outward by 4px.
+      #fa7921 color: The shadow is orange.
+    */
     box-shadow: 0 0 0 2px white, 0 0 0 4px #fa7921;
+    /* The first value (2px white) adds a thin inner layer of white, acting as a border or highlight.
+      The second value (4px #fa7921) adds an outer layer of orange for a two-tone effect. */
   }
   
   /* Styling for the progress bar indicating the speed */
