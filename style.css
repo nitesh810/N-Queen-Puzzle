@@ -200,8 +200,8 @@
     display: flex;
     width: 80%;
     top: 150px;
-    margin: 0 auto;
-    flex-wrap: wrap;
+    margin: 0 auto; /* commonly used to center a block-level element horizontally within its parent container. */
+    flex-wrap: wrap; /* allow the items within a flex container to wrap onto multiple lines when there's not enough space available. */
     justify-content: center;
   }
   
