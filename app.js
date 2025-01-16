@@ -12,7 +12,7 @@ let n, speed, tempSpeed, q, Board = 0;  // Initialize variables
 // Array storing the number of possible arrangements for N-Queens
 let array = [0, 2, 1, 1, 3, 11, 5, 41, 93];
 
-// Object to keep track of board states during the solving process
+// Object to keep track of board states during the solving process, queen position
 let pos = {};
 
 // Update the speed of visualization based on the slider's value
@@ -27,7 +27,7 @@ slider.oninput = function () {
 // Class representing the Queen and its solving methods
 class Queen {
     constructor() {
-        this.position = { ...pos };  // Clone the current position object
+        this.position = { ...pos };  // Clone the current position of queen
         this.uuid = [];  // Array to store unique IDs for boards
     }
 
