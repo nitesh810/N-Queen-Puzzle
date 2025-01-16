@@ -27,7 +27,7 @@ slider.oninput = function () {
 // Class representing the Queen and its solving methods
 class Queen {
     constructor() {
-        this.position = Object.assign({}, pos);  // Clone the current position object
+        this.position = { ...pos };  // Clone the current position object
         this.uuid = [];  // Array to store unique IDs for boards
     }
 
@@ -171,9 +171,6 @@ playButton.onclick = async function visualise() {
     // Clear the previous boards and arrangements
     while (chessBoard.hasChildNodes()) {
         chessBoard.removeChild(chessBoard.firstChild);
-    }
-    if (arrangement.hasChildNodes()) {
-        arrangement.removeChild(arrangement.lastChild);
     }
 
     const para = document.createElement("p");
